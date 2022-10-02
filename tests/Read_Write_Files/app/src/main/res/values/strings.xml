@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Read_Write_Files</string>
+    <string name="minimum_label">Minimum:</string>
+    <string name="maximum_label">Maximum:</string>
+    <string name="button_save">Save</string>
+    <string name="edit_number">Enter a number</string>
+</resources>
