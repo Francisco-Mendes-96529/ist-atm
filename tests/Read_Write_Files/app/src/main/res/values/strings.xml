@@ -4,4 +4,6 @@
     <string name="maximum_label">Maximum:</string>
     <string name="button_save">Save</string>
     <string name="edit_number">Enter a number</string>
+    <string name="button_show">Show</string>
+    <string name="file_reading">Saved in file</string>
 </resources>

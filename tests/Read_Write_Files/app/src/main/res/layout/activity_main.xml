@@ -28,7 +28,9 @@
         android:inputType="number|numberDecimal"
         app:layout_constraintBaseline_toBaselineOf="@+id/minimumTextView"
         app:layout_constraintEnd_toStartOf="@+id/min_button"
-        app:layout_constraintStart_toEndOf="@+id/minimumTextView" />
+        app:layout_constraintStart_toEndOf="@+id/minimumTextView"
+        tools:ignore="TextContrastCheck,DuplicateSpeakableTextCheck"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/min_button"
@@ -36,10 +38,13 @@
         android:layout_height="57dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/teal_200"
+        android:onClick="saveNumber"
         android:text="@string/button_save"
+        android:textColor="@color/black"
         app:layout_constraintBaseline_toBaselineOf="@+id/minimumEditText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:rippleColor="@color/teal_700" />
+        app:rippleColor="@color/teal_700"
+        tools:ignore="DuplicateSpeakableTextCheck" />
 
     <TextView
         android:id="@+id/maximumTextView"
@@ -63,7 +68,9 @@
         android:inputType="number|numberDecimal"
         app:layout_constraintBaseline_toBaselineOf="@+id/maximumTextView"
         app:layout_constraintEnd_toStartOf="@+id/max_button"
-        app:layout_constraintStart_toEndOf="@+id/maximumTextView" />
+        app:layout_constraintStart_toEndOf="@+id/maximumTextView"
+        tools:ignore="TextContrastCheck"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/max_button"
@@ -71,9 +78,38 @@
         android:layout_height="57dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/teal_200"
+        android:onClick="saveNumber"
         android:text="@string/button_save"
+        android:textColor="@color/black"
         app:layout_constraintBaseline_toBaselineOf="@+id/maximumEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:rippleColor="@color/teal_700" />
+
+    <Button
+        android:id="@+id/show_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:onClick="show"
+        android:text="@string/button_show"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/maximumEditText" />
+
+    <TextView
+        android:id="@+id/fileTextView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/file_reading"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
