@@ -7,11 +7,13 @@ import static android.hardware.Sensor.TYPE_RELATIVE_HUMIDITY;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -75,36 +77,39 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 lux.add(value);
                 if(lux.size()>10)
                     lux.remove(0);
+                String lux_values = getString(R.string.lux_placeholder)+"\n";
+                for(int i = 0; i<lux.size(); i++)
+                    lux_values += lux.get(i).toString() + "\n";
+                luxView.setText(lux_values);
                 break;
+
             case TYPE_AMBIENT_TEMPERATURE:
                 // code block
                 temperature.add(value);
                 if(temperature.size()>10)
                     temperature.remove(0);
+                String temperature_values = getString(R.string.temperature_placeholder)+"\n";
+                for(int i = 0; i<temperature.size(); i++)
+                    temperature_values += temperature.get(i).toString() + "\n";
+                temperatureView.setText(temperature_values);
                 break;
+
             case TYPE_RELATIVE_HUMIDITY:
                 // code block
                 humidity.add(value);
                 if(humidity.size()>10)
                     humidity.remove(0);
+                String humidity_values = getString(R.string.humidity_placeholder)+"\n";
+                for(int i = 0; i<humidity.size(); i++)
+                    humidity_values += humidity.get(i).toString() + "\n";
+                humidityView.setText(humidity_values);
                 break;
+
             default:
                 // code block
         }
 
-        String lux_values = "";
-        String temperature_values = "";
-        String humidity_values = "";
-        for(int i = 0; i<lux.size(); i++)
-            lux_values += lux.get(i).toString() + "\n";
-        for(int i = 0; i<temperature.size(); i++)
-            temperature_values += temperature.get(i).toString() + "\n";
-        for(int i = 0; i<humidity.size(); i++)
-            humidity_values += humidity.get(i).toString() + "\n";
 
-        luxView.setText("Light (lux):\n"+lux_values);
-        temperatureView.setText("Temperature (ºC):\n"+temperature_values);
-        humidityView.setText("Humidity (%):\n"+humidity_values);
     }
     @Override
     protected void onResume() {
@@ -119,6 +124,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onPause();
         sensorManager.unregisterListener(this);
     }
+
+    public void OpenAlarmActivity(View view) {
+        Intent intent = new Intent(this, AlarmActivity.class);
+        startActivity(intent);
+
+    }
+        // Do something in response to button
 
 
 
