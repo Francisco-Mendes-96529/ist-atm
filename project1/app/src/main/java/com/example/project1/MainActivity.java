@@ -62,7 +62,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
     @Override
     public final void onSensorChanged(SensorEvent event) {
-        TextView textView = findViewById(R.id.textView);
+        TextView luxView = findViewById(R.id.textView);
+        TextView temperatureView = findViewById(R.id.textView4);
+        TextView humidityView = findViewById(R.id.textView5);
 
         int type_sensor= event.sensor.getType();
 
@@ -89,8 +91,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             default:
                 // code block
         }
-        String message = lux.toString() + temperature.toString() + humidity.toString();
-        textView.setText(message);
+
+        String lux_values = "";
+        String temperature_values = "";
+        String humidity_values = "";
+        for(int i = 0; i<lux.size(); i++)
+            lux_values += lux.get(i).toString() + "\n";
+        for(int i = 0; i<temperature.size(); i++)
+            temperature_values += temperature.get(i).toString() + "\n";
+        for(int i = 0; i<humidity.size(); i++)
+            humidity_values += humidity.get(i).toString() + "\n";
+
+        luxView.setText("Light (lux):\n"+lux_values);
+        temperatureView.setText("Temperature (ºC):\n"+temperature_values);
+        humidityView.setText("Humidity (%):\n"+humidity_values);
     }
     @Override
     protected void onResume() {
