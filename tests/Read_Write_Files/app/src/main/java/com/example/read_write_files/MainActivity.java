@@ -24,6 +24,11 @@ public class MainActivity extends AppCompatActivity {
 
         initialMessage = getString(R.string.file_reading)+"\n\n";
         file = new File(this.getFilesDir(), filename);
+        TextView textView = findViewById(R.id.fileTextView);
+        if(file.exists())
+            textView.setText(initialMessage+"File exists\n"+this.getFilesDir().toString());
+        else
+            textView.setText(initialMessage+"File doesn't exist");
     }
     
     public void saveNumber(View view) {
