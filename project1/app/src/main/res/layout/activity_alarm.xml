@@ -7,66 +7,76 @@
     tools:context=".AlarmActivity">
 
     <EditText
-        android:id="@+id/editTextNumberDecimal7"
-        android:layout_width="100dp"
+        android:id="@+id/lightbotalarm"
+        android:layout_width="0dp"
         android:layout_height="42dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:inputType="numberDecimal"
+        app:layout_constraintEnd_toStartOf="@+id/button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <EditText
-        android:id="@+id/editTextNumberDecimal6"
-        android:layout_width="100dp"
+        android:id="@+id/lighttopalarm"
+        android:layout_width="0dp"
         android:layout_height="42dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:inputType="numberDecimal"
+        app:layout_constraintEnd_toStartOf="@+id/button7"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal7" />
+        app:layout_constraintTop_toBottomOf="@+id/lightbotalarm" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:text="Button"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editTextNumberDecimal7"
-        app:layout_constraintStart_toEndOf="@+id/editTextNumberDecimal7" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/lightbotalarm"
+        app:layout_constraintEnd_toStartOf="@+id/toggleButton" />
 
     <EditText
-        android:id="@+id/editTextNumberDecimal8"
-        android:layout_width="100dp"
+        android:id="@+id/temperaturebotalarm"
+        android:layout_width="0dp"
         android:layout_height="42dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:inputType="numberSigned|numberDecimal"
+        app:layout_constraintEnd_toStartOf="@+id/button4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <EditText
-        android:id="@+id/editTextNumberDecimal9"
-        android:layout_width="100dp"
+        android:id="@+id/temperaturetopalarm"
+        android:layout_width="0dp"
         android:layout_height="42dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:inputType="numberSigned|numberDecimal"
+        app:layout_constraintEnd_toStartOf="@+id/button8"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal8" />
+        app:layout_constraintTop_toBottomOf="@+id/temperaturebotalarm" />
 
     <EditText
-        android:id="@+id/editTextNumberDecimal10"
-        android:layout_width="100dp"
+        android:id="@+id/humiditybotalarm"
+        android:layout_width="0dp"
         android:layout_height="42dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:inputType="numberDecimal"
+        app:layout_constraintEnd_toStartOf="@+id/button9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
@@ -74,111 +84,113 @@
         android:id="@+id/button10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:text="Button"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editTextNumberDecimal11"
-        app:layout_constraintStart_toEndOf="@+id/editTextNumberDecimal11" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/humiditytopalarm"
+        app:layout_constraintEnd_toStartOf="@+id/toggleButton6" />
 
     <EditText
-        android:id="@+id/editTextNumberDecimal11"
-        android:layout_width="100dp"
+        android:id="@+id/humiditytopalarm"
+        android:layout_width="0dp"
         android:layout_height="42dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:inputType="numberDecimal"
+        app:layout_constraintEnd_toStartOf="@+id/button10"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal10" />
+        app:layout_constraintTop_toBottomOf="@+id/humiditybotalarm" />
 
     <Button
         android:id="@+id/button9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:text="Button"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editTextNumberDecimal10"
-        app:layout_constraintStart_toEndOf="@+id/editTextNumberDecimal10" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/humiditybotalarm"
+        app:layout_constraintEnd_toStartOf="@+id/toggleButton5" />
 
     <ToggleButton
         android:id="@+id/toggleButton6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="20dp"
         android:text="ToggleButton"
         app:layout_constraintBaseline_toBaselineOf="@+id/button10"
-        app:layout_constraintStart_toEndOf="@+id/button10" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ToggleButton
         android:id="@+id/toggleButton5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="20dp"
         android:text="ToggleButton"
         app:layout_constraintBaseline_toBaselineOf="@+id/button9"
-        app:layout_constraintStart_toEndOf="@+id/button9" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ToggleButton
         android:id="@+id/toggleButton4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="20dp"
         android:text="ToggleButton"
         app:layout_constraintBaseline_toBaselineOf="@+id/button8"
-        app:layout_constraintStart_toEndOf="@+id/button8" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/button8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:text="Button"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editTextNumberDecimal9"
-        app:layout_constraintStart_toEndOf="@+id/editTextNumberDecimal9" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/temperaturetopalarm"
+        app:layout_constraintEnd_toStartOf="@+id/toggleButton4" />
 
     <ToggleButton
         android:id="@+id/toggleButton3"
-        android:layout_width="wrap_content"
+        android:layout_width="88dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="20dp"
         android:text="ToggleButton"
         app:layout_constraintBaseline_toBaselineOf="@+id/button4"
-        app:layout_constraintStart_toEndOf="@+id/button4" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/button4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:text="Button"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editTextNumberDecimal8"
-        app:layout_constraintStart_toEndOf="@+id/editTextNumberDecimal8" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/temperaturebotalarm"
+        app:layout_constraintEnd_toStartOf="@+id/toggleButton3" />
 
     <ToggleButton
         android:id="@+id/toggleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="20dp"
         android:text="ToggleButton"
         app:layout_constraintBaseline_toBaselineOf="@+id/button"
-        app:layout_constraintStart_toEndOf="@+id/button" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ToggleButton
         android:id="@+id/toggleButton2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="20dp"
         android:text="ToggleButton"
         app:layout_constraintBaseline_toBaselineOf="@+id/button7"
-        app:layout_constraintStart_toEndOf="@+id/button7" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/button7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:text="Button"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editTextNumberDecimal6"
-        app:layout_constraintStart_toEndOf="@+id/editTextNumberDecimal6" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/lighttopalarm"
+        app:layout_constraintEnd_toStartOf="@+id/toggleButton2" />
 
     <TextView
         android:id="@+id/textView3"
@@ -198,7 +210,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/temperature_placeholder"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal6" />
+        app:layout_constraintTop_toBottomOf="@+id/lighttopalarm" />
 
     <TextView
         android:id="@+id/textView7"
@@ -208,6 +220,6 @@
         android:layout_marginTop="16dp"
         android:text="@string/humidity_placeholder"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberDecimal9" />
+        app:layout_constraintTop_toBottomOf="@+id/temperaturetopalarm" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private List<Float> lux = new ArrayList<Float>();
     private List<Float> temperature =new ArrayList<Float>();
     private List<Float> humidity = new ArrayList<Float>();
+    protected static String alarmFileName = "alarmFile.txt";
+    protected static File alarmFile = null;
+
+    protected static String lightTopThreshold = "";
+    protected static String lightBotThreshold = "";
+    protected static String temperatureTopThreshold = "";
+    protected static String temperatureBotThreshold = "";
+    protected static String humidityTopThreshold = "";
+    protected static String humidityBotThreshold = "";
+    protected static String lightTopFlag = "";
+    protected static String lightBotFlag = "";
+    protected static String temperatureTopFlag = "";
+    protected static String temperatureBotFlag = "";
+    protected static String humidityTopFlag = "";
+    protected static String humidityBotFlag = "";
+
 
 
     @Override
@@ -40,22 +57,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sTemperature = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         sHumidity = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY);
 
-        //List<Sensor> deviceSensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
-
-        // Capture the layout's TextView and set the string as its text
-        //String message = "List sensors \n";
-        //String message = String.format("List of sensors (Nº" + " of sensors:%d)\n",deviceSensors.size());
-
-/*
-        for (int i=0; i<deviceSensors.size(); i++){
-            message= message.concat(deviceSensors.get(i).getName());
-            message= message.concat("\n");
-        }
-
-        TextView textView = findViewById(R.id.textView);
-        textView.setText(message);
-
- */
+        alarmFile = new File(this.getFilesDir(),alarmFileName);
     }
 
     @Override
