@@ -1,9 +1,5 @@
 package com.example.project1;
 
-import static android.hardware.Sensor.TYPE_AMBIENT_TEMPERATURE;
-import static android.hardware.Sensor.TYPE_LIGHT;
-import static android.hardware.Sensor.TYPE_RELATIVE_HUMIDITY;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -17,27 +13,35 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
-    private SensorManager sensorManager;
-    private Sensor sLight;
-    private Sensor sTemperature;
-    private Sensor sHumidity;
-    private List<Float> lux = new ArrayList<Float>();
-    private List<Float> temperature =new ArrayList<Float>();
-    private List<Float> humidity = new ArrayList<Float>();
-    protected static String alarmFileName = "alarmFile.txt";
+    private static SensorManager sensorManager;
+    private static Sensor sLight;
+    private static Sensor sTemperature;
+    private static Sensor sHumidity;
+
+    // Files
+    protected static final String ALARM_FILE_NAME = "alarmFile.txt";
     protected static File alarmFile = null;
+    protected static final String HISTORY_FILE_NAME = "historyFile.txt";
+    protected static File historyFile = null;
+
+    protected static final List<Float> lux = new ArrayList<>();
+    protected static final List<Float> temperature = new ArrayList<>();
+    protected static final List<Float> humidity = new ArrayList<>();
 
     protected static String lightTopThreshold = "";
-    protected static String lightBotThreshold = "";
-    protected static String temperatureTopThreshold = "";
-    protected static String temperatureBotThreshold = "";
-    protected static String humidityTopThreshold = "";
-    protected static String humidityBotThreshold = "";
+    protected static String lightBotThreshold = "0";
+    protected static String temperatureTopThreshold = "100";
+    protected static String temperatureBotThreshold = "0";
+    protected static String humidityTopThreshold = "100";
+    protected static String humidityBotThreshold = "0";
     protected static String lightTopFlag = "";
     protected static String lightBotFlag = "";
     protected static String temperatureTopFlag = "";
@@ -46,24 +50,77 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected static String humidityBotFlag = "";
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-        sLight = sensorManager.getDefaultSensor(TYPE_LIGHT);
+        sLight = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         sTemperature = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         sHumidity = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY);
 
-        alarmFile = new File(this.getFilesDir(),alarmFileName);
+        float maximumRange = sLight.getMaximumRange();
+        lightTopThreshold = String.valueOf(maximumRange);
+        TextView maxView = findViewById(R.id.textView);
+        maxView.setText(lightTopThreshold);
+
+        alarmFile = new File(this.getFilesDir(),ALARM_FILE_NAME);
+        if(alarmFile.exists()) {
+            // Read file
+            int length = (int) alarmFile.length();
+            byte[] bytes = new byte[length];
+            try (FileInputStream fis = new FileInputStream(alarmFile)) {
+                //noinspection ResultOfMethodCallIgnored
+                fis.read(bytes);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String bytesString = new String(bytes);
+            String[] alarms = bytesString.split("\n");
+            /////////////////////////////////////////////////// assign values to the strings
+        }
+        else {
+            // Create file
+            try (FileOutputStream fos = new FileOutputStream(alarmFile)) {
+                String contents = ""; // write the structure of the file
+                fos.write(contents.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        historyFile = new File(this.getFilesDir(),HISTORY_FILE_NAME);
+        if(historyFile.exists()) {
+            // Read file
+            int length = (int) historyFile.length();
+            byte[] bytes = new byte[length];
+            try (FileInputStream fis = new FileInputStream(historyFile)) {
+                //noinspection ResultOfMethodCallIgnored
+                fis.read(bytes);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String bytesString = new String(bytes);
+            String[] history = bytesString.split("\n");
+            /////////////////////////////////////////////////// assign values to the strings
+        }
+        else {
+            // Create file
+            try (FileOutputStream fos = new FileOutputStream(historyFile)) {
+                String contents = ""; // write the structure of the file
+                fos.write(contents.getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public final void onAccuracyChanged(Sensor sensor, int accuracy) {
         // Do something here if sensor accuracy changes.
     }
+
     @Override
     public final void onSensorChanged(SensorEvent event) {
         TextView luxView = findViewById(R.id.textView);
@@ -74,66 +131,63 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         float value = event.values[0];
         switch(type_sensor) {
-            case TYPE_LIGHT:
+            case Sensor.TYPE_LIGHT:
                 // code block
                 lux.add(value);
                 if(lux.size()>10)
                     lux.remove(0);
-                String lux_values = getString(R.string.lux_placeholder)+"\n";
+                StringBuilder lux_values = new StringBuilder(getString(R.string.lux_placeholder) + "\n");
                 for(int i = 0; i<lux.size(); i++)
-                    lux_values += lux.get(i).toString() + "\n";
-                luxView.setText(lux_values);
+                    lux_values.append(lux.get(i).toString()).append("\n");
+                luxView.setText(lux_values.toString());
                 break;
 
-            case TYPE_AMBIENT_TEMPERATURE:
+            case Sensor.TYPE_AMBIENT_TEMPERATURE:
                 // code block
                 temperature.add(value);
                 if(temperature.size()>10)
                     temperature.remove(0);
-                String temperature_values = getString(R.string.temperature_placeholder)+"\n";
+                StringBuilder temperature_values = new StringBuilder(getString(R.string.temperature_placeholder) + "\n");
                 for(int i = 0; i<temperature.size(); i++)
-                    temperature_values += temperature.get(i).toString() + "\n";
-                temperatureView.setText(temperature_values);
+                    temperature_values.append(temperature.get(i).toString()).append("\n");
+                temperatureView.setText(temperature_values.toString());
                 break;
 
-            case TYPE_RELATIVE_HUMIDITY:
+            case Sensor.TYPE_RELATIVE_HUMIDITY:
                 // code block
                 humidity.add(value);
                 if(humidity.size()>10)
                     humidity.remove(0);
-                String humidity_values = getString(R.string.humidity_placeholder)+"\n";
+                StringBuilder humidity_values = new StringBuilder(getString(R.string.humidity_placeholder) + "\n");
                 for(int i = 0; i<humidity.size(); i++)
-                    humidity_values += humidity.get(i).toString() + "\n";
-                humidityView.setText(humidity_values);
+                    humidity_values.append(humidity.get(i).toString()).append("\n");
+                humidityView.setText(humidity_values.toString());
                 break;
 
             default:
                 // code block
+                break;
         }
-
-
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         sensorManager.registerListener(this, sLight, SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(this, sTemperature, SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(this, sHumidity, SensorManager.SENSOR_DELAY_NORMAL);
-
     }
+
     @Override
     protected void onPause() {
         super.onPause();
         sensorManager.unregisterListener(this);
     }
 
-    public void OpenAlarmActivity(View view) {
+    public void openAlarmActivity(View view) {
         Intent intent = new Intent(this, AlarmActivity.class);
         startActivity(intent);
-
     }
-        // Do something in response to button
-
 
 
 }

@@ -17,18 +17,6 @@ public class AlarmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
 
-        // Read file
-        int length = (int) MainActivity.alarmFile.length();
-        byte[] bytes = new byte[length];
-        try (FileInputStream fis = new FileInputStream(MainActivity.alarmFile)) {
-            //noinspection ResultOfMethodCallIgnored
-            fis.read(bytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String bytesString = new String(bytes);
-        String[] alarms = bytesString.split("\n");
-
         EditText test = findViewById(R.id.lightbotalarm);
         test.setText(MainActivity.lightBotThreshold);
 
