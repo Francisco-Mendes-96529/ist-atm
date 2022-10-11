@@ -7,6 +7,8 @@
     <string name="min">Min:</string>
     <string name="max">Max:</string>
     <string name="save">Save</string>
+    <string name="history_button">History</string>
+    <string name="alarms_button">Alarms</string>
 
 
 </resources>

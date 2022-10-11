@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".HistoryActivity">
 
     <TextView
         android:id="@+id/lightView"
@@ -44,31 +44,5 @@
         android:textSize="16sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/temperatureView"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/alarmButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="32dp"
-        android:onClick="openAlarmActivity"
-        android:text="@string/alarms_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/historyButton"
-        app:layout_constraintEnd_toStartOf="@+id/historyButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/historyButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:onClick="openHistoryActivity"
-        android:text="@string/history_button"
-        app:layout_constraintBaseline_toBaselineOf="@+id/alarmButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/alarmButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

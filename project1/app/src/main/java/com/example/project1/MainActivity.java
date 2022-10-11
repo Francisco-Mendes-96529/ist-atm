@@ -2,6 +2,7 @@ package com.example.project1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -11,6 +12,9 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private static Sensor sLight;
     private static Sensor sTemperature;
     private static Sensor sHumidity;
+    //private static Snackbar snackbar = null;
 
     // Files
     protected static final String ALARM_FILE_NAME = "alarmFile.txt";
@@ -36,18 +41,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected static final List<Float> temperature = new ArrayList<>();
     protected static final List<Float> humidity = new ArrayList<>();
 
-    protected static String lightTopThreshold = "";
-    protected static String lightBotThreshold = "0";
-    protected static String temperatureTopThreshold = "100";
-    protected static String temperatureBotThreshold = "0";
-    protected static String humidityTopThreshold = "100";
-    protected static String humidityBotThreshold = "0";
-    protected static String lightTopFlag = "";
-    protected static String lightBotFlag = "";
-    protected static String temperatureTopFlag = "";
-    protected static String temperatureBotFlag = "";
-    protected static String humidityTopFlag = "";
-    protected static String humidityBotFlag = "";
     protected static final String[] Alarm_array = {"0","false","1","false","0","false","1","false","0","false","1","false"};//{lightBotThreshold,lightBotFlag,lightTopThreshold,lightTopFlag,temperatureBotThreshold,temperatureBotFlag,temperatureTopThreshold,temperatureTopFlag,humidityBotThreshold,humidityBotFlag,humidityTopThreshold,humidityTopFlag};
 
 
@@ -61,11 +54,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sLight = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         sTemperature = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         sHumidity = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY);
+        //snackbar = Snackbar.make(this.findViewById(R.id.lightView), "Message is deleted", Snackbar.LENGTH_LONG);
 
-        float maximumRange = sLight.getMaximumRange();
-        lightTopThreshold = String.valueOf(maximumRange);
-        TextView maxView = findViewById(R.id.textView);
-        maxView.setText(lightTopThreshold);
 
         alarmFile = new File(this.getFilesDir(),ALARM_FILE_NAME);
         if(alarmFile.exists()) {
@@ -130,11 +120,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         // Do something here if sensor accuracy changes.
     }
 
+    @SuppressLint("DefaultLocale")
     @Override
     public final void onSensorChanged(SensorEvent event) {
-        TextView luxView = findViewById(R.id.textView);
-        TextView temperatureView = findViewById(R.id.textView4);
-        TextView humidityView = findViewById(R.id.textView5);
+        TextView luxView = findViewById(R.id.lightView);
+        TextView temperatureView = findViewById(R.id.temperatureView);
+        TextView humidityView = findViewById(R.id.humidityView);
 
         int type_sensor= event.sensor.getType();
 
@@ -146,9 +137,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 if(lux.size()>10)
                     lux.remove(0);
                 StringBuilder lux_values = new StringBuilder(getString(R.string.lux_placeholder) + "\n");
-                for(int i = 0; i<lux.size(); i++)
-                    lux_values.append(lux.get(i).toString()).append("\n");
+                for(int i = 0; i<lux.size(); i++) {
+                    lux_values.append(String.format("%.1f\n", lux.get(i)));
+                }
                 luxView.setText(lux_values.toString());
+
+                // Alarms
+                if(lux.get(lux.size()-1) <= Float.parseFloat(Alarm_array[0]) && Boolean.parseBoolean(Alarm_array[1])){
+                    Toast.makeText(this, "WARNING!\n Light low", Toast.LENGTH_SHORT).show();
+                }
+                else if(lux.get(lux.size()-1) >= Float.parseFloat(Alarm_array[2]) && Boolean.parseBoolean(Alarm_array[3])){
+                    //snackbar.show();
+                    Toast.makeText(this, "WARNING!\n Light high", Toast.LENGTH_SHORT).show();
+                }
                 break;
 
             case Sensor.TYPE_AMBIENT_TEMPERATURE:
@@ -158,8 +159,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     temperature.remove(0);
                 StringBuilder temperature_values = new StringBuilder(getString(R.string.temperature_placeholder) + "\n");
                 for(int i = 0; i<temperature.size(); i++)
-                    temperature_values.append(temperature.get(i).toString()).append("\n");
+                    temperature_values.append(String.format("% .2f\n", temperature.get(i)));
                 temperatureView.setText(temperature_values.toString());
+
+                // Alarms
+                if(temperature.get(temperature.size()-1) <= Float.parseFloat(Alarm_array[4]) && Boolean.parseBoolean(Alarm_array[5])){
+                    Toast.makeText(this, "     WARNING!\nTemperature low", Toast.LENGTH_SHORT).show();
+                }
+                else if(temperature.get(temperature.size()-1) >= Float.parseFloat(Alarm_array[6]) && Boolean.parseBoolean(Alarm_array[7])){
+                    Toast.makeText(this, "      WARNING!\nTemperature high", Toast.LENGTH_SHORT).show();
+                }
                 break;
 
             case Sensor.TYPE_RELATIVE_HUMIDITY:
@@ -169,8 +178,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     humidity.remove(0);
                 StringBuilder humidity_values = new StringBuilder(getString(R.string.humidity_placeholder) + "\n");
                 for(int i = 0; i<humidity.size(); i++)
-                    humidity_values.append(humidity.get(i).toString()).append("\n");
+                    humidity_values.append(String.format("% .2f\n", humidity.get(i)));
                 humidityView.setText(humidity_values.toString());
+
+                // Alarms
+                if(humidity.get(humidity.size()-1) <= Float.parseFloat(Alarm_array[8]) && Boolean.parseBoolean(Alarm_array[9])){
+                    Toast.makeText(this, "  WARNING!\nHumidity low", Toast.LENGTH_SHORT).show();
+                }
+                else if(humidity.get(humidity.size()-1) >= Float.parseFloat(Alarm_array[10]) && Boolean.parseBoolean(Alarm_array[11])){
+                    Toast.makeText(this, "   WARNING!\nHumidity high", Toast.LENGTH_SHORT).show();
+                }
                 break;
 
             default:
@@ -188,13 +205,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
         sensorManager.unregisterListener(this);
     }
 
     public void openAlarmActivity(View view) {
         Intent intent = new Intent(this, AlarmActivity.class);
+        startActivity(intent);
+    }
+
+    public void openHistoryActivity(View view) {
+        Intent intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
     }
 
