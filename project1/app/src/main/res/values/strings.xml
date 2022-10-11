@@ -4,5 +4,9 @@
     <string name="temperature_placeholder">Temperature (ºC):</string>
     <string name="humidity_placeholder">Humidity (%):</string>
     <string name="active">Active</string>
+    <string name="min">Min:</string>
+    <string name="max">Max:</string>
+    <string name="save">Save</string>
+
 
 </resources>

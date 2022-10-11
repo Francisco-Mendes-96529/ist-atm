@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected static String temperatureBotFlag = "";
     protected static String humidityTopFlag = "";
     protected static String humidityBotFlag = "";
+    protected static final String[] Alarm_array = {"0","false","1","false","0","false","1","false","0","false","1","false"};//{lightBotThreshold,lightBotFlag,lightTopThreshold,lightTopFlag,temperatureBotThreshold,temperatureBotFlag,temperatureTopThreshold,temperatureTopFlag,humidityBotThreshold,humidityBotFlag,humidityTopThreshold,humidityTopFlag};
+
 
 
     @Override
@@ -78,13 +80,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
             String bytesString = new String(bytes);
             String[] alarms = bytesString.split("\n");
-            /////////////////////////////////////////////////// assign values to the strings
+
+            for(int i=0; i<12; i++){
+                Alarm_array[i]=alarms[i];
+            }
+
         }
         else {
             // Create file
             try (FileOutputStream fos = new FileOutputStream(alarmFile)) {
-                String contents = ""; // write the structure of the file
-                fos.write(contents.getBytes());
+                StringBuilder contents = new StringBuilder();
+                for(int i=0; i<12; i++){
+                    contents.append(Alarm_array[i]).append("\n");
+                }
+                fos.write(contents.toString().getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             }
