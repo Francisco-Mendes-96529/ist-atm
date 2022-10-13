@@ -14,13 +14,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private static Sensor sLight;
     private static Sensor sTemperature;
     private static Sensor sHumidity;
-    //private static Snackbar snackbar = null;
+    private static Toast toast = null;
 
     // Files
     protected static final String ALARM_FILE_NAME = "alarmFile.txt";
@@ -41,7 +41,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected static final List<Float> temperature = new ArrayList<>();
     protected static final List<Float> humidity = new ArrayList<>();
 
-    protected static final String[] Alarm_array = {"0","false","1","false","0","false","1","false","0","false","1","false"};//{lightBotThreshold,lightBotFlag,lightTopThreshold,lightTopFlag,temperatureBotThreshold,temperatureBotFlag,temperatureTopThreshold,temperatureTopFlag,humidityBotThreshold,humidityBotFlag,humidityTopThreshold,humidityTopFlag};
+    protected static float max_temperature;
+    protected static float min_temperature;
+    protected static String time_max_temperature;
+    protected static String time_min_temperature;
+
+
+
+
+
+    protected static final String[] Alarm_array = {"0","false","0","false","0","false","0","false","0","false","0","false"};//{lightBotThreshold,lightBotFlag,lightTopThreshold,lightTopFlag,temperatureBotThreshold,temperatureBotFlag,temperatureTopThreshold,temperatureTopFlag,humidityBotThreshold,humidityBotFlag,humidityTopThreshold,humidityTopFlag};
 
 
 
@@ -54,8 +63,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sLight = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         sTemperature = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         sHumidity = sensorManager.getDefaultSensor(Sensor.TYPE_RELATIVE_HUMIDITY);
-        //snackbar = Snackbar.make(this.findViewById(R.id.lightView), "Message is deleted", Snackbar.LENGTH_LONG);
-
 
         alarmFile = new File(this.getFilesDir(),ALARM_FILE_NAME);
         if(alarmFile.exists()) {
@@ -132,7 +139,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         float value = event.values[0];
         switch(type_sensor) {
             case Sensor.TYPE_LIGHT:
-                // code block
                 lux.add(value);
                 if(lux.size()>10)
                     lux.remove(0);
@@ -144,17 +150,48 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 // Alarms
                 if(lux.get(lux.size()-1) <= Float.parseFloat(Alarm_array[0]) && Boolean.parseBoolean(Alarm_array[1])){
-                    Toast.makeText(this, "WARNING!\n Light low", Toast.LENGTH_SHORT).show();
+                    if (toast != null)
+                        toast.cancel();
+                    toast = Toast.makeText(this,"WARNING!\n Light low", Toast.LENGTH_SHORT);
+                    toast.show();
                 }
                 else if(lux.get(lux.size()-1) >= Float.parseFloat(Alarm_array[2]) && Boolean.parseBoolean(Alarm_array[3])){
-                    //snackbar.show();
-                    Toast.makeText(this, "WARNING!\n Light high", Toast.LENGTH_SHORT).show();
+                    if (toast != null)
+                        toast.cancel();
+                    toast = Toast.makeText(this, "WARNING!\n Light high", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                else {
+                    if (toast != null)
+                        toast.cancel();
+                    //toast = null;
                 }
                 break;
 
             case Sensor.TYPE_AMBIENT_TEMPERATURE:
-                // code block
+
                 temperature.add(value);
+                if(temperature.size()==1){
+                    max_temperature=value;
+                    min_temperature=value;
+                    time_max_temperature = getTime();
+                    time_min_temperature = time_max_temperature;
+                }
+                else{
+                    if(value >= max_temperature){
+                     max_temperature=value;
+                     time_max_temperature = getTime();
+                    }
+                    else if(value <= min_temperature){
+                    min_temperature = value;
+                    time_min_temperature = getTime();
+                    }
+
+                }
+                TextView testView = findViewById(R.id.testView);
+                String temp = String.format("MAX: %f - %s\nMIN: %f - %s",max_temperature,time_max_temperature,min_temperature,time_min_temperature);
+                testView.setText(temp);
+
                 if(temperature.size()>10)
                     temperature.remove(0);
                 StringBuilder temperature_values = new StringBuilder(getString(R.string.temperature_placeholder) + "\n");
@@ -205,9 +242,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
         sensorManager.unregisterListener(this);
+        try (FileOutputStream fos = new FileOutputStream(historyFile)) {
+            String contents = "file saved on onPause()"; // write the structure of the file
+            fos.write(contents.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void openAlarmActivity(View view) {
@@ -220,6 +263,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         startActivity(intent);
     }
 
+    private String getTime(){
+        long currentTimeMs = System.currentTimeMillis();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
+        Date resultDate = new Date(currentTimeMs);
+        return sdf.format(resultDate);
+    }
 
 }
 
