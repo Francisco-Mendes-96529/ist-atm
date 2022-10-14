@@ -9,9 +9,10 @@
     <string name="save">Save</string>
     <string name="history_button">History</string>
     <string name="alarms_button">Alarms</string>
-    <string name="title_activity_history_tab">HistoryActivityTab</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
+    <string name="title_activity_history">History</string>
+    <string name="temperature">Temperature</string>
+    <string name="light">Light</string>
+    <string name="humidity">Humidity</string>
 
 
 </resources>

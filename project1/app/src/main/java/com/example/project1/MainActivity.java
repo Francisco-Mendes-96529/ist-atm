@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;import java.util.Objects;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         }
 
-        historyFile = new File(this.getFilesDir(),HISTORY_FILE_NAME);
+        historyFile = new File(this.getCacheDir(),HISTORY_FILE_NAME);
         if(historyFile.exists()) {
             if(lux.size()==0 && temperature.size()==0 && humidity.size()==0) {
                 // Read file
@@ -169,27 +169,27 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             testView.setText(temp);
         }
 
-        if(lux.size()!=0){
-            TextView testView = findViewById(R.id.light_value);
-            String temp = String.format("%.2f",lux.get(lux.size()-1));
+        if(temperature.size()!=0){
+            TextView testView = findViewById(R.id.temp_value);
+            String temp = String.format("%.2f",temperature.get(temperature.size()-1));
             testView.setText(temp);
-            testView = findViewById(R.id.max_light_value);
-            temp = String.format("%.2f", max_light);
+            testView = findViewById(R.id.max_temp_value);
+            temp = String.format("%.2f", max_temperature);
             testView.setText(temp);
-            testView = findViewById(R.id.min_light_value);
-            temp = String.format("%.2f",min_light);
+            testView = findViewById(R.id.min_temp_value);
+            temp = String.format("%.2f",min_temperature);
             testView.setText(temp);
         }
 
-        if(lux.size()!=0){
-            TextView testView = findViewById(R.id.light_value);
-            String temp = String.format("%.2f",lux.get(lux.size()-1));
+        if(humidity.size()!=0){
+            TextView testView = findViewById(R.id.humidity_value);
+            String temp = String.format("%.2f",humidity.get(humidity.size()-1));
             testView.setText(temp);
-            testView = findViewById(R.id.max_light_value);
-            temp = String.format("%.2f", max_light);
+            testView = findViewById(R.id.max_humidity_value);
+            temp = String.format("%.2f", max_humidity);
             testView.setText(temp);
-            testView = findViewById(R.id.min_light_value);
-            temp = String.format("%.2f",min_light);
+            testView = findViewById(R.id.min_humidity_value);
+            temp = String.format("%.2f",min_humidity);
             testView.setText(temp);
         }
     }
@@ -323,7 +323,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         toast.cancel();
                     toast = Toast.makeText(this,"      WARNING!\nTemperature high", Toast.LENGTH_LONG);
                     toast.show();
-                    Toast.makeText(this, "      WARNING!\nTemperature high", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     if (toast != null)
@@ -382,13 +381,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     if (toast != null)
                         toast.cancel();
                     toast = Toast.makeText(this,"  WARNING!\nHumidity low", Toast.LENGTH_LONG);
-                    toast.show();Toast.makeText(this, "  WARNING!\nHumidity low", Toast.LENGTH_SHORT).show();
+                    toast.show();
                 }
                 else if(humidity.get(humidity.size()-1) >= Float.parseFloat(Alarm_array[10]) && Boolean.parseBoolean(Alarm_array[11])){
                     if (toast != null)
                         toast.cancel();
                     toast = Toast.makeText(this,"   WARNING!\nHumidity high", Toast.LENGTH_LONG);
-                    toast.show();Toast.makeText(this, "   WARNING!\nHumidity high", Toast.LENGTH_SHORT).show();
+                    toast.show();
                 }
                 else {
                     if (toast != null)
@@ -436,33 +435,30 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private void saveHistoryFile() {
         try (FileOutputStream fos = new FileOutputStream(historyFile)) {
-            String contents = "Light\n";
+            StringBuilder contents = new StringBuilder("Light\n");
             for(int i = 0; i<lux.size(); i++)
-                contents += lux.get(i).toString() + "\n";
-            contents += "max\n";
+                contents.append(lux.get(i).toString()).append("\n");
+            contents.append("max\n");
             if(lux.size()!=0)
-                contents += max_light + "\n" + time_max_light + "\n"
-                    + "min\n" + min_light + "\n" + time_min_light + "\nTemperature\n";
+                contents.append(max_light).append("\n").append(time_max_light).append("\n").append("min\n").append(min_light).append("\n").append(time_min_light).append("\nTemperature\n");
             else
-                contents += "min\nTemperature\n";
+                contents.append("min\nTemperature\n");
             for(int i = 0; i<temperature.size(); i++)
-                contents += temperature.get(i).toString() + "\n";
-            contents += "max\n";
-            if(lux.size()!=0)
-                contents += max_temperature + "\n" + time_max_temperature + "\n"
-                    + "min\n" + min_temperature + "\n" + time_min_temperature + "\nHumidity\n";
+                contents.append(temperature.get(i).toString()).append("\n");
+            contents.append("max\n");
+            if(temperature.size()!=0)
+                contents.append(max_temperature).append("\n").append(time_max_temperature).append("\n").append("min\n").append(min_temperature).append("\n").append(time_min_temperature).append("\nHumidity\n");
             else
-                contents += "min\nHumidity\n";
+                contents.append("min\nHumidity\n");
             for(int i = 0; i<humidity.size(); i++)
-                            contents += humidity.get(i).toString() + "\n";
-                        contents += "max\n";
-                        if(lux.size()!=0)
-                            contents += max_humidity + "\n" + time_max_humidity + "\n"
-                                + "min\n" + min_humidity + "\n" + time_min_humidity;
-                        else
-                            contents += "min";
+                contents.append(humidity.get(i).toString()).append("\n");
+            contents.append("max\n");
+            if(humidity.size()!=0)
+                contents.append(max_humidity).append("\n").append(time_max_humidity).append("\n").append("min\n").append(min_humidity).append("\n").append(time_min_humidity);
+            else
+                contents.append("min");
 
-            fos.write(contents.getBytes());
+            fos.write(contents.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }

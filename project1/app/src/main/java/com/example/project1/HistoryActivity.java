@@ -14,10 +14,10 @@ public class HistoryActivity extends AppCompatActivity {
 
         TextView luxView = findViewById(R.id.lightView);
         StringBuilder lux_values = new StringBuilder(getString(R.string.lux_placeholder) + "\n");
-                for(int i = 0; i<MainActivity.lux.size(); i++) {
-                    lux_values.append(String.format("%.1f\n", MainActivity.lux.get(i)));
-                }
-                luxView.setText(lux_values.toString());
+        for(int i = 0; i<MainActivity.lux.size(); i++) {
+            lux_values.append(String.format("%.1f\n", MainActivity.lux.get(i)));
+        }
+        luxView.setText(lux_values.toString());
 
     }
 }
