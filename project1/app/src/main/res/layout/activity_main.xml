@@ -10,12 +10,12 @@
         android:id="@+id/lightView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:gravity="right"
         android:text="@string/lux_placeholder"
         android:textAlignment="gravity"
         android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,27 +23,28 @@
         android:id="@+id/temperatureView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="24dp"
         android:gravity="right"
         android:text="@string/temperature_placeholder"
         android:textAlignment="gravity"
         android:textSize="16sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/lightView"
-        app:layout_constraintEnd_toStartOf="@+id/humidityView"
-        app:layout_constraintStart_toEndOf="@+id/lightView" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/min_light_value" />
 
     <TextView
         android:id="@+id/humidityView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="24dp"
         android:gravity="right"
         android:text="@string/humidity_placeholder"
         android:textAlignment="gravity"
         android:textSize="16sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/temperatureView"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/min_temp_value" />
 
     <Button
         android:id="@+id/alarmButton"
@@ -72,13 +73,98 @@
         app:layout_constraintStart_toEndOf="@+id/alarmButton" />
 
     <TextView
-        android:id="@+id/testView"
+        android:id="@+id/max_temp_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="444dp"
-        android:text="TextView"
+        android:layout_marginTop="8dp"
+        android:text="--"
+        app:layout_constraintStart_toEndOf="@+id/temp_value"
+        app:layout_constraintTop_toBottomOf="@+id/temperatureView" />
+
+    <TextView
+        android:id="@+id/min_temp_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="--"
+        app:layout_constraintStart_toEndOf="@+id/temp_value"
+        app:layout_constraintTop_toBottomOf="@+id/temp_value" />
+
+    <TextView
+        android:id="@+id/temp_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="---"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/max_temp_value" />
+
+    <TextView
+        android:id="@+id/light_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="---"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/max_light_value" />
+
+    <TextView
+        android:id="@+id/max_light_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="--"
+        app:layout_constraintStart_toEndOf="@+id/light_value"
+        app:layout_constraintTop_toBottomOf="@+id/lightView" />
+
+    <TextView
+        android:id="@+id/min_light_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="--"
+        app:layout_constraintStart_toEndOf="@+id/light_value"
+        app:layout_constraintTop_toBottomOf="@+id/light_value" />
+
+    <TextView
+        android:id="@+id/humidity_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/max_humidity_value" />
+
+    <TextView
+        android:id="@+id/max_humidity_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/humidity_value"
+        app:layout_constraintTop_toBottomOf="@+id/humidityView" />
+
+    <TextView
+        android:id="@+id/min_humidity_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/humidity_value"
+        app:layout_constraintTop_toBottomOf="@+id/humidity_value" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
