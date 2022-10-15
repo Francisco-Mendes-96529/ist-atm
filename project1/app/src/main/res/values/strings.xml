@@ -5,7 +5,10 @@
     <string name="humidity_placeholder">Humidity (%):</string>
     <string name="active">Active</string>
     <string name="min">Min:</string>
+    <string name="minimum">Minimum:</string>
     <string name="max">Max:</string>
+    <string name="maximum">Maximum:</string>
+    <string name="unitNoValue">Unit: --</string>
     <string name="save">Save</string>
     <string name="history_button">History</string>
     <string name="alarms_button">Alarms</string>
@@ -13,6 +16,14 @@
     <string name="temperature">Temperature</string>
     <string name="light">Light</string>
     <string name="humidity">Humidity</string>
+    <string name="clear">Clear History</string>
+    
+
+    <string-array name="sensors_array">
+        <item>Light</item>
+        <item>Temperature</item>
+        <item>Humidity</item>
+    </string-array>
 
 
 </resources>

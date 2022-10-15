@@ -7,42 +7,96 @@
     tools:context=".HistoryActivity">
 
     <TextView
-        android:id="@+id/lightView"
+        android:id="@+id/history_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:gravity="right"
-        android:text="@string/lux_placeholder"
+        android:text="-----------"
         android:textAlignment="gravity"
-        android:textSize="16sp"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/units" />
 
     <TextView
-        android:id="@+id/temperatureView"
+        android:id="@+id/max_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:gravity="right"
-        android:text="@string/temperature_placeholder"
         android:textAlignment="gravity"
         android:textSize="16sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/lightView"
-        app:layout_constraintEnd_toStartOf="@+id/humidityView"
-        app:layout_constraintStart_toEndOf="@+id/lightView" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/max_placeholder"
+        app:layout_constraintStart_toEndOf="@+id/max_placeholder" />
 
     <TextView
-        android:id="@+id/humidityView"
+        android:id="@+id/min_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:gravity="right"
-        android:text="@string/humidity_placeholder"
         android:textAlignment="gravity"
         android:textSize="16sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/temperatureView"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/min_placeholder"
+        app:layout_constraintStart_toEndOf="@+id/max_placeholder" />
+
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="200dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/purple_200"
+        android:popupBackground="@color/purple_200"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/max_placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/maximum"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/min_placeholder"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/min_placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/minimum"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/units"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/unitNoValue"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner1" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:onClick="click_clear_history"
+        android:text="@string/clear"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

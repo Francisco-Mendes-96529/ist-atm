@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private static Sensor sLight;
     private static Sensor sTemperature;
     private static Sensor sHumidity;
-    private static Toast toast = null;
+    protected static Toast toast = null;
 
     // Files
     protected static final String ALARM_FILE_NAME = "alarmFile.txt";
