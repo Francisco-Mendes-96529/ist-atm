@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     protected static final String[] Alarm_array = {"0","false","0","false","0","false","0","false","0","false","0","false"};//{lightBotThreshold,lightBotFlag,lightTopThreshold,lightTopFlag,temperatureBotThreshold,temperatureBotFlag,temperatureTopThreshold,temperatureTopFlag,humidityBotThreshold,humidityBotFlag,humidityTopThreshold,humidityTopFlag};
 
+    @SuppressLint("DefaultLocale")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -243,11 +244,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 if(lux.size()>10)
                     lux.remove(0);
-                /*StringBuilder lux_values = new StringBuilder(getString(R.string.lux_placeholder) + "\n");
-                for(int i = 0; i<lux.size(); i++) {
-                    lux_values.append(String.format("%.1f\n", lux.get(i)));
-                }
-                luxView.setText(lux_values.toString());*/
 
                 // Alarms
                 if(lux.get(lux.size()-1) <= Float.parseFloat(Alarm_array[0]) && Boolean.parseBoolean(Alarm_array[1])){
@@ -306,10 +302,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 if(temperature.size()>10)
                     temperature.remove(0);
-                /*StringBuilder temperature_values = new StringBuilder(getString(R.string.temperature_placeholder) + "\n");
-                for(int i = 0; i<temperature.size(); i++)
-                    temperature_values.append(String.format("% .2f\n", temperature.get(i)));
-                temperatureView.setText(temperature_values.toString());*/
 
                 // Alarms
                 if(temperature.get(temperature.size()-1) <= Float.parseFloat(Alarm_array[4]) && Boolean.parseBoolean(Alarm_array[5])){
@@ -336,8 +328,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 testView = findViewById(R.id.humidity_value);
                 temp = String.format("%.2f",value);
                 testView.setText(temp);
-
-
+                
                 if(humidity.size()==1){
                     max_humidity=value;
                     min_humidity=value;
@@ -370,11 +361,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 if(humidity.size()>10)
                     humidity.remove(0);
-
-                /*StringBuilder humidity_values = new StringBuilder(getString(R.string.humidity_placeholder) + "\n");
-                for(int i = 0; i<humidity.size(); i++)
-                    humidity_values.append(String.format("% .2f\n", humidity.get(i)));
-                humidityView.setText(humidity_values.toString());*/
 
                 // Alarms
                 if(humidity.get(humidity.size()-1) <= Float.parseFloat(Alarm_array[8]) && Boolean.parseBoolean(Alarm_array[9])){
@@ -428,7 +414,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     private String getTime(){
         long currentTimeMs = System.currentTimeMillis();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
         Date resultDate = new Date(currentTimeMs);
         return sdf.format(resultDate);
     }

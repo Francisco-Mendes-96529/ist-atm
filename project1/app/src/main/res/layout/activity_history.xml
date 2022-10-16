@@ -92,7 +92,7 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         android:onClick="click_clear_history"
         android:text="@string/clear"
         app:layout_constraintBottom_toBottomOf="parent"

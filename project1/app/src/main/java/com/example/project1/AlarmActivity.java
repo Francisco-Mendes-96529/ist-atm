@@ -2,7 +2,6 @@ package com.example.project1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -33,9 +32,7 @@ public class AlarmActivity extends AppCompatActivity {
         for(int i=0; i<6; i++){
             ToggleButton toggle = findViewById(id_button_array[i]);
             int finalI = i*2+1;
-            toggle.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                MainActivity.Alarm_array[finalI]= String.valueOf(isChecked);
-            });
+            toggle.setOnCheckedChangeListener((buttonView, isChecked) -> MainActivity.Alarm_array[finalI]= String.valueOf(isChecked));
         }
     }
 

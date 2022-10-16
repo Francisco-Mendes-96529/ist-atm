@@ -2,6 +2,7 @@ package com.example.project1;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,6 +32,7 @@ public class HistoryActivity extends AppCompatActivity implements AdapterView.On
         spinner.setOnItemSelectedListener(this);
     }
 
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
         String chosen = parent.getItemAtPosition(position).toString();
@@ -43,7 +45,10 @@ public class HistoryActivity extends AppCompatActivity implements AdapterView.On
             unitsView.setText("Unit: lx");
             if(MainActivity.lux.size()==0){
                 clearTextViews();
-                Toast.makeText(this,"No numbers registered", Toast.LENGTH_LONG).show();
+                if(MainActivity.toast != null)
+                    MainActivity.toast.cancel();
+                MainActivity.toast = Toast.makeText(this, "No numbers registered", Toast.LENGTH_LONG);
+                MainActivity.toast.show();
             }
             else{
                 StringBuilder values = new StringBuilder("Oldest\n");
@@ -57,10 +62,13 @@ public class HistoryActivity extends AppCompatActivity implements AdapterView.On
             }
         }
         else if (chosen.equals("Temperature")){
-            unitsView.setText("Unit: degrees");
+            unitsView.setText("Unit: ºC");
             if(MainActivity.temperature.size()==0){
                 clearTextViews();
-                Toast.makeText(this,"No numbers registered", Toast.LENGTH_LONG).show();
+                if(MainActivity.toast != null)
+                    MainActivity.toast.cancel();
+                MainActivity.toast = Toast.makeText(this, "No numbers registered", Toast.LENGTH_LONG);
+                MainActivity.toast.show();
             }
             else{
                 StringBuilder values = new StringBuilder("Oldest\n");
@@ -69,15 +77,18 @@ public class HistoryActivity extends AppCompatActivity implements AdapterView.On
                 }
                 values.append("Latest");
                 textView.setText(values);
-                maxView.setText(String.format("%.1f degrees - %s", MainActivity.max_temperature, MainActivity.time_max_temperature));
-                minView.setText(String.format("%.1f degrees - %s", MainActivity.min_temperature, MainActivity.time_min_temperature));
+                maxView.setText(String.format("%.1f ºC - %s", MainActivity.max_temperature, MainActivity.time_max_temperature));
+                minView.setText(String.format("%.1f ºC - %s", MainActivity.min_temperature, MainActivity.time_min_temperature));
             }
         }
         else{
             unitsView.setText("Unit: %");
             if(MainActivity.humidity.size()==0){
                 clearTextViews();
-                Toast.makeText(this,"No numbers registered", Toast.LENGTH_LONG).show();
+                if(MainActivity.toast != null)
+                    MainActivity.toast.cancel();
+                MainActivity.toast = Toast.makeText(this, "No numbers registered", Toast.LENGTH_LONG);
+                MainActivity.toast.show();
             }
             else{
                 StringBuilder values = new StringBuilder("Oldest\n");
@@ -86,8 +97,8 @@ public class HistoryActivity extends AppCompatActivity implements AdapterView.On
                 }
                 values.append("Latest");
                 textView.setText(values);
-                maxView.setText(String.format("%.1f % - %s", MainActivity.max_humidity, MainActivity.time_max_humidity));
-                minView.setText(String.format("%.1f % - %s", MainActivity.min_humidity, MainActivity.time_min_humidity));
+                maxView.setText(String.format("%.1f %% - %s", MainActivity.max_humidity, MainActivity.time_max_humidity));
+                minView.setText(String.format("%.1f %% - %s", MainActivity.min_humidity, MainActivity.time_min_humidity));
             }
         }
     }
