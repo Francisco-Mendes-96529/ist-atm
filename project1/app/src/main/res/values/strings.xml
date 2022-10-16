@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Weather Station G007</string>
-    <string name="lux_placeholder">Light (lux):</string>
+    <string name="lux_placeholder">Light (lx):</string>
     <string name="temperature_placeholder">Temperature (ºC):</string>
     <string name="humidity_placeholder">Humidity (%):</string>
     <string name="active">Active</string>

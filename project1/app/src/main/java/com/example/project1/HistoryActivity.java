@@ -40,7 +40,7 @@ public class HistoryActivity extends AppCompatActivity implements AdapterView.On
         TextView minView = findViewById(R.id.min_value);
 
         if (chosen.equals("Light")){
-            unitsView.setText("Unit: lux");
+            unitsView.setText("Unit: lx");
             if(MainActivity.lux.size()==0){
                 clearTextViews();
                 Toast.makeText(this,"No numbers registered", Toast.LENGTH_LONG).show();
@@ -52,8 +52,8 @@ public class HistoryActivity extends AppCompatActivity implements AdapterView.On
                 }
                 values.append("Latest");
                 textView.setText(values);
-                maxView.setText(String.format("%.1f lux - %s", MainActivity.max_light, MainActivity.time_max_light));
-                minView.setText(String.format("%.1f lux - %s", MainActivity.min_light, MainActivity.time_min_light));
+                maxView.setText(String.format("%.1f lx - %s", MainActivity.max_light, MainActivity.time_max_light));
+                minView.setText(String.format("%.1f lx - %s", MainActivity.min_light, MainActivity.time_min_light));
             }
         }
         else if (chosen.equals("Temperature")){
@@ -86,8 +86,8 @@ public class HistoryActivity extends AppCompatActivity implements AdapterView.On
                 }
                 values.append("Latest");
                 textView.setText(values);
-                maxView.setText(String.format("%.1f lux - %s", MainActivity.max_humidity, MainActivity.time_max_humidity));
-                minView.setText(String.format("%.1f lux - %s", MainActivity.min_humidity, MainActivity.time_min_humidity));
+                maxView.setText(String.format("%.1f % - %s", MainActivity.max_humidity, MainActivity.time_max_humidity));
+                minView.setText(String.format("%.1f % - %s", MainActivity.min_humidity, MainActivity.time_min_humidity));
             }
         }
     }
