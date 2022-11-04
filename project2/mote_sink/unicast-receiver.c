@@ -50,11 +50,12 @@
 
 static struct simple_udp_connection unicast_connection;
 typedef struct Vector {
-  uip_ipaddr_t *addr;
+  uip_ipaddr_t addr;
   int presence;
   float temperature[5];
 }vector;
 static vector *pvector;
+static int pvector_size;
 
 /*---------------------------------------------------------------------------*/
 PROCESS(unicast_receiver_process, "Unicast receiver example process");
@@ -66,8 +67,32 @@ fill_values(const uip_ipaddr_t *sender_addr,
 {
   if(pvector==NULL){
     pvector = (vector *)malloc(sizeof(vector));
-    uip_ipaddr_copy(pvector[0].addr, sender_addr);
-    //if(strcmp(data[0],"P")) printf("P\n");
+    pvector_size = 1;
+    uip_ip6addr(&pvector[0].addr, 0xaaaa, 0, 0, 0, 0, 0, 0, 0);
+    uip_ipaddr_copy(&pvector[0].addr, sender_addr);
+    uip_debug_ipaddr_print(&pvector[0].addr);
+    printf("\n");
+    if(data[0]=='P') printf("P\n");
+  }
+  else{
+    int exist = 0;
+    int i;
+    for(i = 0; i<pvector_size; i++){
+      printf("i = %d ",i);
+      uip_debug_ipaddr_print(&pvector[i].addr);
+      printf("\n");
+      if(uip_ipaddr_cmp(&pvector[i].addr, sender_addr)){
+        exist = 1;
+        break;
+      }
+    }
+    if(!exist){
+      pvector_size++;
+      pvector = (vector *)realloc(pvector, (pvector_size)*sizeof(vector));
+      uip_ip6addr(&pvector[i].addr, 0xaaaa, 0, 0, 0, 0, 0, 0, 0);
+      uip_ipaddr_copy(&pvector[i].addr, sender_addr);
+    }
+    printf("size %d\n",pvector_size);
   }
 }
 /*---------------------------------------------------------------------------*/
@@ -151,6 +176,7 @@ PROCESS_THREAD(unicast_receiver_process, ev, data)
   while(1) {
     PROCESS_WAIT_EVENT();
   }
+  free(pvector);
   PROCESS_END();
 }
 /*---------------------------------------------------------------------------*/
