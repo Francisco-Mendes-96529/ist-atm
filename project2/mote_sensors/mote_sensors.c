@@ -39,111 +39,41 @@
  */
 
 #include "contiki.h"
+
+#include "servreg-hack.h"
+
 #include "dev/button-sensor.h"
-#include "sys/etimer.h"
 #include "dev/leds.h"
 #include "dev/serial-line.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
-/*---------------------------------------------------------------------------*/
-PROCESS(button_process, "Test button");
-PROCESS(temperature_process, "Test temperature");
-AUTOSTART_PROCESSES(&button_process, &temperature_process);
-/*---------------------------------------------------------------------------*/
-
-PROCESS_THREAD(button_process, ev, data)
-{
-  PROCESS_BEGIN();
-  static struct etimer et;
-	static uint32_t seconds_interval = 1;
-
-  SENSORS_ACTIVATE(button_sensor);
-
-  while(1) {
-	  PROCESS_WAIT_EVENT();
-    
-    if(ev == sensors_event &&
-		       data == &button_sensor){
-	    char led = leds_get();	
-		  if(led & LEDS_YELLOW){
-			  etimer_restart(&et);
-			  printf("reset\n");
-		  }
-		  else{
-        etimer_set(&et, CLOCK_SECOND*seconds_interval);
-			  leds_on(LEDS_YELLOW);
-			  printf("on\n");
-		  }
-	  }
-    else if(etimer_expired(&et)) {  // If the event it's provoked by the timer expiration, then...
-      leds_off(LEDS_YELLOW);	
-		  printf("off\n");
-    }
-  }
-  PROCESS_END();
-}
-
-/*---------------------------------------------------------------------------*/
-
-PROCESS_THREAD(temperature_process, ev, data)
-{
-  PROCESS_BEGIN();
-	static float temp_max = 35;
-  printf("MAX:%.0f\n",temp_max);
-  leds_on(LEDS_GREEN);
-
-  while(1) {
-		PROCESS_WAIT_EVENT();
-
-    if(ev == serial_line_event_message){
-      printf("%.2f - max:%.0f\n",atof(data),temp_max);
-
-			if(atof(data) > temp_max){
-				leds_off(LEDS_GREEN);
-				leds_on(LEDS_RED);
-				printf("too hot!\n");
-			}
-			else{
-				leds_off(LEDS_RED);
-				leds_on(LEDS_GREEN);
-				printf("cold\n");
-			}
-		}
-  }
-  PROCESS_END();
-}
-
-/*---------------------------------------------------------------------------*/
-
-#include "contiki.h"
-#include "lib/random.h"
-#include "sys/ctimer.h"
-#include "sys/etimer.h"
+#include "net/ip/simple-udp.h"
 #include "net/ip/uip.h"
-#include "net/ipv6/uip-ds6.h"
 #include "net/ip/uip-debug.h"
+#include "net/ipv6/uip-ds6.h"
 
+#include "sys/etimer.h"
 #include "sys/node-id.h"
 
-#include "simple-udp.h"
-#include "servreg-hack.h"
-
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define UDP_PORT 1234
 #define SERVICE_ID 190
 
-#define SEND_INTERVAL		(60 * CLOCK_SECOND)
-#define SEND_TIME		(random_rand() % (SEND_INTERVAL))
+#define STR(x) #x
+#define LIGHTS_TIME (10 * CLOCK_SECOND)
+#define TEMPERATURE_MAX 35
 
 static struct simple_udp_connection unicast_connection;
+static int temp_k = 0;
+static float temperature[] = {0,0,0,0,0,0};
 
 /*---------------------------------------------------------------------------*/
+PROCESS(button_process, "Test button");
+PROCESS(temperature_process, "Test temperature");
 PROCESS(unicast_sender_process, "Unicast sender example process");
-AUTOSTART_PROCESSES(&unicast_sender_process);
+AUTOSTART_PROCESSES(&button_process, &temperature_process, &unicast_sender_process);
 /*---------------------------------------------------------------------------*/
 static void
 receiver(struct simple_udp_connection *c,
@@ -179,14 +109,93 @@ set_global_address(void)
     }
   }
 }
+
 /*---------------------------------------------------------------------------*/
+
+PROCESS_THREAD(button_process, ev, data)
+{
+  PROCESS_BEGIN();
+  static struct etimer et;
+
+  SENSORS_ACTIVATE(button_sensor);
+
+  while(1) {
+	  PROCESS_WAIT_EVENT();
+    
+    if(ev == sensors_event &&
+		       data == &button_sensor){
+	    char led = leds_get();	
+		  if(led & LEDS_YELLOW){
+			  etimer_restart(&et);
+			  printf("restart\n");
+		  }
+		  else{
+        etimer_set(&et, LIGHTS_TIME);
+			  leds_on(LEDS_YELLOW);
+			  printf("on\n");
+        process_post_synch(&unicast_sender_process, PROCESS_EVENT_CONTINUE, "P 1");
+		  }
+	  }
+    else if(ev == PROCESS_EVENT_TIMER) {  // If the event it's provoked by the timer expiration, then...
+      leds_off(LEDS_YELLOW);	
+		  printf("off\n");
+      process_post_synch(&unicast_sender_process, PROCESS_EVENT_CONTINUE, "P 0");
+    }
+  }
+
+  PROCESS_END();
+}
+
+/*---------------------------------------------------------------------------*/
+
+PROCESS_THREAD(temperature_process, ev, data)
+{
+  PROCESS_BEGIN();
+  printf("MAX:%.1f\n",(float)TEMPERATURE_MAX);
+  leds_on(LEDS_GREEN);
+
+  while(1) {
+		PROCESS_WAIT_EVENT();
+
+    if(ev == serial_line_event_message){
+      float temp = atof(data);
+      temp_k++;
+      printf("%.2f - max:%.1f\n",temp,(float)TEMPERATURE_MAX);
+      
+      temperature[temp_k-1] = temp;
+      if(temp_k==5){
+        // send values
+        char  msg[50];
+        sprintf(msg, "T %.1f %.1f %.1f %.1f %.1f", temperature[0], temperature[1], temperature[2], temperature[3], temperature[4]);
+        process_post_synch(&unicast_sender_process, PROCESS_EVENT_CONTINUE, msg);
+        
+        // default
+        temp_k=0;
+      }
+
+			if(temp > TEMPERATURE_MAX){
+				leds_off(LEDS_GREEN);
+				leds_on(LEDS_RED);
+				printf("too hot!\n");
+			}
+			else{
+				leds_off(LEDS_RED);
+				leds_on(LEDS_GREEN);
+				printf("cold\n");
+			}
+		}
+  }
+  PROCESS_END();
+}
+
+/*---------------------------------------------------------------------------*/
+
 PROCESS_THREAD(unicast_sender_process, ev, data)
 {
-  static struct etimer periodic_timer;
-  static struct etimer send_timer;
   uip_ipaddr_t *addr;
 
   PROCESS_BEGIN();
+  printf("%s\n",data);
 
   servreg_hack_init();
 
@@ -195,27 +204,20 @@ PROCESS_THREAD(unicast_sender_process, ev, data)
   simple_udp_register(&unicast_connection, UDP_PORT,
                       NULL, UDP_PORT, receiver);
 
-  etimer_set(&periodic_timer, SEND_INTERVAL);
   while(1) {
+    PROCESS_WAIT_EVENT();
+    if(ev == PROCESS_EVENT_CONTINUE){
+      addr = servreg_hack_lookup(SERVICE_ID);
+      if(addr != NULL) {
 
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
-    etimer_reset(&periodic_timer);
-    etimer_set(&send_timer, SEND_TIME);
+        printf("Sending unicast to ");
+        uip_debug_ipaddr_print(addr);
+        printf("\n");
+        simple_udp_sendto(&unicast_connection, data, strlen(data) + 1, addr);
 
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&send_timer));
-    addr = servreg_hack_lookup(SERVICE_ID);
-    if(addr != NULL) {
-      static unsigned int message_number;
-      char buf[20];
-
-      printf("Sending unicast to ");
-      uip_debug_ipaddr_print(addr);
-      printf("\n");
-      sprintf(buf, "Message %d", message_number);
-      message_number++;
-      simple_udp_sendto(&unicast_connection, buf, strlen(buf) + 1, addr);
-    } else {
-      printf("Service %d not found\n", SERVICE_ID);
+      } else {
+        printf("Service %d not found\n", SERVICE_ID);
+      }
     }
   }
 

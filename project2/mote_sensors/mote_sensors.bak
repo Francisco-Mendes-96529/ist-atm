@@ -57,7 +57,7 @@ PROCESS_THREAD(button_process, ev, data)
 {
   PROCESS_BEGIN();
   static struct etimer et;
-	static uint32_t seconds_interval = 1;
+	static uint32_t seconds_interval = 10;
 
   SENSORS_ACTIVATE(button_sensor);
 
@@ -77,7 +77,7 @@ PROCESS_THREAD(button_process, ev, data)
 			  printf("on\n");
 		  }
 	  }
-    else if(etimer_expired(&et)) {  // If the event it's provoked by the timer expiration, then...
+    else if(ev == PROCESS_EVENT_TIMER) {  // If the event it's provoked by the timer expiration, then...
       leds_off(LEDS_YELLOW);	
 		  printf("off\n");
     }

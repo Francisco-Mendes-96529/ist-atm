@@ -31,9 +31,7 @@
  */
 
 #include "contiki.h"
-#include "lib/random.h"
-#include "sys/ctimer.h"
-#include "sys/etimer.h"
+
 #include "net/ip/uip.h"
 #include "net/ipv6/uip-ds6.h"
 #include "net/ip/uip-debug.h"
@@ -44,19 +42,34 @@
 #include "net/rpl/rpl.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define UDP_PORT 1234
 #define SERVICE_ID 190
 
-#define SEND_INTERVAL		(10 * CLOCK_SECOND)
-#define SEND_TIME		(random_rand() % (SEND_INTERVAL))
-
 static struct simple_udp_connection unicast_connection;
+typedef struct Vector {
+  uip_ipaddr_t *addr;
+  int presence;
+  float temperature[5];
+}vector;
+static vector *pvector;
 
 /*---------------------------------------------------------------------------*/
 PROCESS(unicast_receiver_process, "Unicast receiver example process");
 AUTOSTART_PROCESSES(&unicast_receiver_process);
+/*---------------------------------------------------------------------------*/
+static void
+fill_values(const uip_ipaddr_t *sender_addr,
+            const uint8_t *data)
+{
+  if(pvector==NULL){
+    pvector = (vector *)malloc(sizeof(vector));
+    uip_ipaddr_copy(pvector[0].addr, sender_addr);
+    //if(strcmp(data[0],"P")) printf("P\n");
+  }
+}
 /*---------------------------------------------------------------------------*/
 static void
 receiver(struct simple_udp_connection *c,
@@ -71,6 +84,7 @@ receiver(struct simple_udp_connection *c,
   uip_debug_ipaddr_print(sender_addr);
   printf(" on port %d from port %d with length %d: '%s'\n",
          receiver_port, sender_port, datalen, data);
+  fill_values(sender_addr, data);
 }
 /*---------------------------------------------------------------------------*/
 static uip_ipaddr_t *
