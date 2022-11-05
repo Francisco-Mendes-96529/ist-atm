@@ -64,8 +64,8 @@
 #define SERVICE_ID 190
 
 #define STR(x) #x
-#define LIGHTS_TIME(300 * CLOCK_SECOND)
-#define TEMPERATURE_TIME((30 + (float) rand() / RAND_MAX * 5) * CLOCK_SECOND)
+#define LIGHTS_TIME (300 * CLOCK_SECOND)
+#define TEMPERATURE_TIME ((30 + (float) rand() / RAND_MAX * 5) * CLOCK_SECOND)
 #define TEMPERATURE_MAX 35
 
 static struct simple_udp_connection unicast_connection;
@@ -78,15 +78,15 @@ PROCESS(button_process, "Button process");
 PROCESS(temperature_process, "Temperature process");
 PROCESS(temperature_sampling_process, "Temperature sampling process");
 PROCESS(unicast_sender_process, "Unicast sender example process");
-AUTOSTART_PROCESSES( & button_process, & temperature_process, & temperature_sampling_process, & unicast_sender_process);
+AUTOSTART_PROCESSES(&button_process, &temperature_process, &temperature_sampling_process, &unicast_sender_process);
 /*---------------------------------------------------------------------------*/
 static void
-receiver(struct simple_udp_connection * c,
-        const uip_ipaddr_t * sender_addr,
+receiver(struct simple_udp_connection *c,
+        const uip_ipaddr_t *sender_addr,
         uint16_t sender_port,
-        const uip_ipaddr_t * receiver_addr,
+        const uip_ipaddr_t *receiver_addr,
         uint16_t receiver_port,
-        const uint8_t * data,
+        const uint8_t *data,
         uint16_t datalen) {
   printf("Data received on port %d from port %d with length %d\n",
     receiver_port, sender_port, datalen);
@@ -98,9 +98,9 @@ set_global_address(void) {
   int i;
   uint8_t state;
 
-  uip_ip6addr( & ipaddr, 0xaaaa, 0, 0, 0, 0, 0, 0, 0);
-  uip_ds6_set_addr_iid( & ipaddr, & uip_lladdr);
-  uip_ds6_addr_add( & ipaddr, 0, ADDR_AUTOCONF);
+  uip_ip6addr(&ipaddr, 0xaaaa, 0, 0, 0, 0, 0, 0, 0);
+  uip_ds6_set_addr_iid(&ipaddr, &uip_lladdr);
+  uip_ds6_addr_add(&ipaddr, 0, ADDR_AUTOCONF);
 
   printf("IPv6 addresses: ");
   for (i = 0; i < UIP_DS6_ADDR_NB; i++) {
@@ -129,21 +129,21 @@ PROCESS_THREAD(button_process, ev, data) {
     PROCESS_WAIT_EVENT();
 
     if (ev == sensors_event &&
-      data == & button_sensor) {
+      data == &button_sensor) {
       char led = leds_get(); // check what LEDs are on	
       if (led & LEDS_YELLOW) { // if the light is on, just restart the timer
-        etimer_restart( & et);
+        etimer_restart(&et);
         printf("Timer restart\n");
       } else { // if the light is off, turn it on, start the timer and send a message to sink
-        etimer_set( & et, LIGHTS_TIME);
+        etimer_set(&et, LIGHTS_TIME);
         leds_on(LEDS_YELLOW);
         printf("Ligths ON\n");
-        process_post_synch( & unicast_sender_process, PROCESS_EVENT_CONTINUE, "P 1");
+        process_post_synch(&unicast_sender_process, PROCESS_EVENT_CONTINUE, "P 1");
       }
     } else if (ev == PROCESS_EVENT_TIMER) { // if the timer expires (no movemment), turn off the light and send that information to sink
       leds_off(LEDS_YELLOW);
       printf("Lights OFF\n");
-      process_post_synch( & unicast_sender_process, PROCESS_EVENT_CONTINUE, "P 0");
+      process_post_synch(&unicast_sender_process, PROCESS_EVENT_CONTINUE, "P 0");
     }
   }
 
@@ -179,7 +179,7 @@ PROCESS_THREAD(temperature_process, ev, data) {
 PROCESS_THREAD(temperature_sampling_process, ev, data) {
   PROCESS_BEGIN();
   static struct etimer etemp; // interval to read sensor values
-  etimer_set( & etemp, TEMPERATURE_TIME); // start the timer
+  etimer_set(&etemp, TEMPERATURE_TIME); // start the timer
 
   leds_on(LEDS_GREEN); // GREEN = temperature ok
 
@@ -187,7 +187,7 @@ PROCESS_THREAD(temperature_sampling_process, ev, data) {
     PROCESS_WAIT_EVENT();
 
     if (ev == PROCESS_EVENT_TIMER) {
-      etimer_reset( & etemp);
+      etimer_reset(&etemp);
 
       // read sensor if it was real
       // float temp = sensor.value;
@@ -200,7 +200,7 @@ PROCESS_THREAD(temperature_sampling_process, ev, data) {
         // send values to sink
         char msg[50];
         sprintf(msg, "T %.1f %.1f %.1f %.1f %.1f", temperature[0], temperature[1], temperature[2], temperature[3], temperature[4]);
-        process_post_synch( & unicast_sender_process, PROCESS_EVENT_CONTINUE, msg);
+        process_post_synch(&unicast_sender_process, PROCESS_EVENT_CONTINUE, msg);
 
         // reset counter
         temp_k = 0;
@@ -227,7 +227,7 @@ PROCESS_THREAD(temperature_sampling_process, ev, data) {
  */
 
 PROCESS_THREAD(unicast_sender_process, ev, data) {
-  uip_ipaddr_t * addr;
+  uip_ipaddr_t *addr;
 
   PROCESS_BEGIN();
 
@@ -235,7 +235,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data) {
 
   set_global_address();
 
-  simple_udp_register( & unicast_connection, UDP_PORT,
+  simple_udp_register(&unicast_connection, UDP_PORT,
     NULL, UDP_PORT, receiver);
 
   while (1) {
@@ -247,7 +247,7 @@ PROCESS_THREAD(unicast_sender_process, ev, data) {
         printf("Sending unicast to ");
         uip_debug_ipaddr_print(addr);
         printf("\n");
-        simple_udp_sendto( & unicast_connection, data, strlen(data) + 1, addr);
+        simple_udp_sendto(&unicast_connection, data, strlen(data) + 1, addr);
 
       } else {
         printf("Service %d not found\n", SERVICE_ID);
